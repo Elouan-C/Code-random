@@ -77,15 +77,33 @@ def stl_reader(file_name):
                 
     
     return point_list,triangles
-    
+
+def rectifier(points,target,tolerance): #snap all the points in the tolerance range to the z target value in order to have a flat surface
+    if type(target) is not list:
+        target = [target]
+    for i in range(len(target)):
+        tar = float(target[i])
+        if type(tolerance) is list:
+            tol = float(tolerance[i])
+        else:
+            tol = float(tolerance)
+        mini = tar-tol
+        maxi = tar+tol
+        
+        for j in range(len(points)):
+            z = points[j][2]
+
+            if (mini <= z) and (z <= maxi):
+                points[j][2] = tar
+    return points
 
 """
 TEST
 """
 
-point_pyramide=[[0,0,0],
-                [0,1,0],
-                [1,0,0],
+point_pyramide=[[0,0,-0.1],
+                [0,1,0.2],
+                [1,0,0.1],
                 [0.5,0.5,1]]
 tri_pyramide=[[0,1,2],
               [0,1,3],
@@ -96,6 +114,9 @@ name = "test.stl"
 stl_writer(tri_pyramide,point_pyramide,name)
 
 pnt,tri = stl_reader(name)
-print("pnt:\n",pnt)
 print("tri:\n",tri)
+print("pnt:\n",pnt)
+
+pnt = rectifier(pnt,0,0.2)
+print("pnt:\n",pnt)
 stl_writer(tri,pnt,'test2.stl')

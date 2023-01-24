@@ -32,21 +32,25 @@ def HEADER(nom_fichier="test",
             "/* originating_system */ '?',",
             "/* authorization */ '?');",
             "",
-            "FILE_SCHEMA (('AUTOMOTIVE_DESIGN { 1 0 10303 214 2 1 1}'));",
+            "FILE_SCHEMA(('CONFIG_CONTROL_DESIGN'));",
             "",
             "ENDSEC;"
             ]
     str_head = '\n'.join(head)
     return str_head
     
-
-
+def DATA():
+    dat = ["DATA;",
+           "ENDSEC;"]
+    str_dat = '\n'.join(dat)
+    return str_dat
 
 
 
 nom_fichier = "test.stp"
 contenue = ["ISO-10303-21;",
             HEADER(),
+            DATA(),
             "END-ISO-10303-21;"]
 str_contenue = string = '\n'.join(contenue)
 creation_fichier(nom_fichier, str_contenue)

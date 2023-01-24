@@ -200,6 +200,12 @@ def get_info(n):
 ###                                                                                                                                                       ###
 #############################################################################################################################################################
 #############################################################################################################################################################
+
+#https://www.geeksforgeeks.org/how-to-set-font-for-text-in-tkinter/
+Font_tuple = ("Courier New", 10, "underline")#, "bold")
+
+
+"""
 def clicked_layer_height():
     val = content_layer_height.get()
     try:
@@ -215,7 +221,75 @@ def clicked_tolerance():
     except:
         print("value isn't numeric")
     entry_tolerance1.delete(0, 'end')
- 
+"""
+def clicked_add_item():
+    print("clicked_add_item")
+    print("CheckVar1.get() ",CheckVar1.get())
+
+    global user_data
+    end = False
+
+    val = content_layer_height.get()
+    tol = []
+    if CheckVar1.get() == 1: #if symetrical
+        tol.append(content_tolerance1.get())
+    else: #if asymetrical
+        tol.append(content_tolerance1.get())
+        tol.append(content_tolerance2.get())
+        
+    try:
+        i = float(val)
+    except:
+        print("value isn't numeric")
+        end = True
+
+    for t in tol:
+        try:
+            i = float(t)
+        except:
+            print("tolerance isn't numeric")
+            end = True
+
+    if end != True:
+        print("c bien ta pas fais d'la merde")
+        template=[17,11,11]
+        line = []
+
+        val = val
+        
+        tol1 = tol[0]
+        if len(tol) == 1:
+            tol2 = tol[0]
+        else:
+            tol2 = tol[1]
+
+        line=[val,tol1,tol2]
+        print("line:",line)
+
+        for i in range(3): #formating text to fit neatly under the heading
+            #doesn't cover the cased where the numbers are too big
+            dif = template[i] - len(line[i])
+            if dif > 0:
+                line[i] = ''.join([" "*dif , line[i]])
+        line = "|".join(line)
+        print(" target z val    |     +     |     -     ")
+        print(line)
+
+        #user_data.set(line)
+        #label5_user_data = tk.Label( textvariable = user_data, font=Font_tuple_head)#data)
+
+        if user_data != '':
+            user_data = '\n'.join([user_data,line])
+        else:
+            user_data = line
+        label5_user_data = tk.Label( text = user_data,
+                                     font=Font_tuple_data)
+        label5_user_data.pack()
+        label5_user_data.place(x=80,y=200)
+        
+            
+        
+
 def delete():
 	listbox_layer_height.delete(0, tk.END)
 	listbox_tolerance.delete(0, tk.END)
@@ -493,6 +567,10 @@ root.geometry(size)
 #       LABEL       LABEL       LABEL       LABEL       LABEL       LABEL       LABEL       LABEL       LABEL       LABEL #
 #=========================================================================================================================#
 
+#https://www.geeksforgeeks.org/how-to-set-font-for-text-in-tkinter/
+Font_tuple_head = ("Courier New Baltic", 10, "underline")
+Font_tuple_data = ("Courier New Baltic", 10)
+
 layer_height = tk.StringVar()
 layer_height.set("target z height (mm)")
 label1_layer_height = tk.Label( textvariable = layer_height)
@@ -511,6 +589,28 @@ label3_tolerance2 = tk.Label( textvariable = tolerance2, state='disabled')
 label3_tolerance2.pack()
 label3_tolerance2.place(x=38,y=120)
 
+
+heading = tk.StringVar()
+heading.set(" target z val    |     +     |     -     ")
+#           |....;....;....;..|....;....;.|....;....;.|
+#                   17              11          11
+label4_heading = tk.Label( textvariable = heading, font=Font_tuple_head)
+label4_heading.pack()
+label4_heading.place(x=80,y=180)
+
+"""
+user_data = tk.StringVar()
+user_data.set("test (g f ef zef zzf fzd | ")
+label5_user_data = tk.Label( textvariable = user_data, font=Font_tuple_data)
+label5_user_data.pack()
+label5_user_data.place(x=80,y=200)
+"""
+user_data = "test (g f ef zef zzf fzd | "
+label5_user_data = tk.Label( text = user_data,
+                             font=Font_tuple_data)
+label5_user_data.pack()
+label5_user_data.place(x=80,y=200)
+
 #=========================================================================================================================#
 #       TEXT BOX       TEXT BOX       TEXT BOX       TEXT BOX       TEXT BOX       TEXT BOX       TEXT BOX       TEXT BOX #
 #=========================================================================================================================#
@@ -519,7 +619,8 @@ label3_tolerance2.place(x=38,y=120)
 file_name = tk.StringVar()
 entry_file_name = tk.Entry(root, textvariable=tk.StringVar(), width =150)
 #entry_file_name.insert(0,'C:/Users/ecreach/Documents/python/maillage_structure_interne_2_evider_reduced.stl')
-entry_file_name.insert(0,'C:/Users/ecreach/Documents/python/piece_test.stl')
+#entry_file_name.insert(0,'C:/Users/ecreach/Documents/python/piece_test.stl')
+entry_file_name.insert(0,'C:/Users/eloua/OneDrive/Documents/projet/CAO/test/700_tri_test_piece.stl')
 entry_file_name.pack()
 
 content_layer_height = tk.StringVar()
@@ -552,23 +653,20 @@ entry_nb_intervalls.place(x=440,y=480)
 #=========================================================================================================================#
 
 # The button to insert the item in the list
-button_layer_height = tk.Button(root, text="Add Item", command=clicked_layer_height)
-button_layer_height.pack()
-button_layer_height.place(x=80,y=130)
 
-button_tolerance = tk.Button(root, text="Add Item", command=clicked_tolerance)
+button_tolerance = tk.Button(root, text="Add Item", command=clicked_add_item)
 button_tolerance.pack()
-button_tolerance.place(x=250,y=900)
+button_tolerance.place(x=100,y=145)
  
 # the button to delete everything
 button_delete = tk.Button(text="Delete everything", command=delete)
 button_delete.pack()
-button_delete.place(x=145,y=150)
+button_delete.place(x=145,y=350)
  
 # The button to delete only the selected item in the list
 button_delete_selected = tk.Button(text="Delete Selected", command=delete_selected)
 button_delete_selected.pack()
-button_delete_selected.place(x=150,y=150)
+button_delete_selected.place(x=150,y=400)
 
 # the button to flatten the stl
 button_delete = tk.Button(text="Flatten ASCII stl", command=flatten_button)
@@ -592,7 +690,7 @@ listbox_tolerance = tk.Listbox(root)
 
 listbox_layer_height_tolerance = tk.Listbox(root, width=2)
 listbox_layer_height_tolerance.pack()
-listbox_layer_height_tolerance.place(x=50,y=180)
+listbox_layer_height_tolerance.place(x=50,y=200)
 
 
 

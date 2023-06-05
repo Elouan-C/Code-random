@@ -26,7 +26,7 @@ def liste_aléatoire(n = 6):
 
 def operation(n = 6):
     liste = []
-    oper = ['+', '-', '*', '/']
+    oper = ['+', '-', '*', '/','0']
     for i in range(n):
         for a in oper:
             r=4
@@ -47,6 +47,7 @@ def trouver_calcule(cible, liste_num):
     nb_operations = len(l)-1
     
     OPERATEURS = toute_position_possible(oper,r=nb_operations)
+    print(OPERATEURS)
     resultats = []
     i=0
     for operateur in OPERATEURS:
@@ -66,6 +67,9 @@ def trouver_calcule(cible, liste_num):
                 
             elif op == '/':
                 re /= l[j]
+                
+            elif op == '0':
+                re = l[j]
 
             if j == nb_operations:
                 delta = abs(cible-re)

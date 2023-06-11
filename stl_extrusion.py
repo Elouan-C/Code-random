@@ -66,24 +66,34 @@ def create_floor(new_edges, fixed_z):
 
 def export_stl(triangles, original_mesh, file_name):
     total_triangles = len(triangles)
-    mesh_data = mesh.Mesh(np.zeros(total_triangles + len(original_mesh.vectors), dtype=mesh.Mesh.dtype))
+    output_mesh = mesh.Mesh(np.zeros(total_triangles, dtype=mesh.Mesh.dtype))
 
     for i, triangle in enumerate(triangles):
-        mesh_data.vectors[i] = triangle
+        output_mesh.vectors[i] = triangle
 
-    for i, triangle in enumerate(original_mesh.vectors):
-        offset = total_triangles
-        mesh_data.vectors[i + offset] = triangle
-
-    mesh_data.save(file_name)
+    output_mesh.save(file_name)
 
 
 # Main program
-file_name = input("Enter the name of the STL file: ")
-fixed_z = float(input("Enter the fixed Z value for new edges and floor: "))
+#file_name = input("Enter the name of the STL file: ")
+file_name = input("Entrer nom du fichier STL: ")
 
 # Load the original STL file
 original_mesh = mesh.Mesh.from_file(file_name)
+
+# Print information about the STL file
+num_triangles = len(original_mesh.vectors)
+min_z = np.min(original_mesh.vectors[:, :, 2])
+max_z = np.max(original_mesh.vectors[:, :, 2])
+#print(f"STL file '{file_name}' contains {num_triangles} triangles.")
+#print(f"Minimum Z value: {min_z}")
+#print(f"Maximum Z value: {max_z}")
+print(f"le Fichier STL contiens {num_triangles} triangles.")
+print(f"Valeur de Z minimal: {min_z}")
+print(f"Valeur de Z maximal: {max_z}")
+
+#fixed_z = float(input("Enter the fixed Z value for new edges and floor: "))
+fixed_z = float(input("Entrer la valeur en Z du sole: "))
 
 # Find free edges
 free_edges = find_free_edges(original_mesh.vectors)
